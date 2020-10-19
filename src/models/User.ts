@@ -1,9 +1,11 @@
 import {DataTypes, Model} from "sequelize";
-import {database} from "../config/database";
+import database from "../config/database";
 
 export class User extends Model {
-    id: number;
+    id: string;
     name: string;
+    email: string;
+    password: string;
     preferredName: string | null;
 
     // timestamps!
@@ -21,6 +23,14 @@ User.init(
         },
         name: {
             type: new DataTypes.STRING(128),
+            allowNull: false,
+        },
+        email: {
+            type: new DataTypes.STRING(128),
+            allowNull: false,
+        },
+        password: {
+            type: new DataTypes.STRING(1024),
             allowNull: false,
         },
         preferredName: {

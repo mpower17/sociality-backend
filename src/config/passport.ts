@@ -1,23 +1,26 @@
-import passport from "passport";
-import passportJWT from "passport-jwt";
 import {User} from "../models/User";
-import { v4 as uuidv4 } from 'uuid';
 
-const JWTStrategy = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 
-passport.use(new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey: uuidv4
-    },
-    function (jwtPayload, cb) {
-        //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-        return User.findOne(jwtPayload.id)
-            .then(user => {
-                return cb(null, user);
-            })
-            .catch(err => {
-                return cb(err);
-            });
-    }
-));
+const options = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: 'key',
+    algorithm: ['RS256']
+};
+
+const strategy = new JwtStrategy(options, (payload, done) => {
+    User.findOne({where: {id: payload.sub}})
+        .then((user) => {
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        })
+        .catch(err => done(err, null))
+});
+
+module.exports = (passport) => {
+    passport.use(strategy);
+}

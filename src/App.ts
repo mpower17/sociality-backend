@@ -3,10 +3,14 @@ import "reflect-metadata";
 import {Container} from 'inversify';
 import {InversifyExpressServer} from 'inversify-express-utils';
 import cors from 'cors';
+import passport from 'passport';
 import './controllers/index';
+import './config/passport';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 let container = new Container();
-
 let server = new InversifyExpressServer(container);
 server.setConfig((app) => {
     // add body parser
@@ -15,6 +19,7 @@ server.setConfig((app) => {
     }));
     app.use(bodyParser.json());
     app.use(cors());
+    app.use(passport.initialize());
 });
 
 let app = server.build();
