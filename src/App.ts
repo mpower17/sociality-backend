@@ -7,6 +7,7 @@ import passport from 'passport';
 import './controllers/index';
 import './config/passport';
 import * as dotenv from 'dotenv';
+import './models/Synchronization';
 
 dotenv.config();
 

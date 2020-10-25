@@ -1,7 +1,9 @@
 import {UserController} from './UserController';
-import {FeedController} from './FeedController';
+import {PostController} from './PostController';
+import {ImageController} from './ImageController';
 
 export {
-    FeedController,
-    UserController
+    PostController,
+    UserController,
+    ImageController
 }

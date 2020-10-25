@@ -3,14 +3,17 @@ import {controller, httpGet, httpPost} from "inversify-express-utils";
 import {User} from "../models/User";
 import {PasswordGenerator} from "../utils/PasswordGenerator";
 import {JwtIssuer} from "../utils/JwtIssuer";
+import {Image} from "../models/Image";
 
 @controller('/users')
 export class UserController {
 
     @httpGet("/")
     async index(req: express.Request, res: express.Response) {
-        return User.findAll<User>({})
-            .then((users: Array<User>) => res.json(users))
+        return User.findAll<User>({ where: {}, include: [Image]})
+            .then((users: Array<User>) => {
+                res.json(users.map(u => u.toDTO()))
+            })
             .catch((err: Error) => res.status(500).json(err));
     }
 
